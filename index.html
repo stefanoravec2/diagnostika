@@ -579,7 +579,26 @@ let pillarMax = [0, 0, 0, 0];
 let userName = '';
 let userEmail = '';
 
-function startQuiz() {
+async function sendToEkomail(name, email) {
+  try {
+    await fetch('https://api2.ecomail.cz/lists/4/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'key': '26c147e9f3d82297eec0953c679e6552fff7090595b9de49ce47c511e5b94bfe'
+      },
+      body: JSON.stringify({
+        subscriber_data: { email: email, name: name },
+        trigger_autoresponders: true,
+        resubscribe: true
+      })
+    });
+  } catch(e) {
+    console.log('Ekomail:', e);
+  }
+}
+
+async function startQuiz() {
   const name = document.getElementById('inp-name').value.trim();
   const email = document.getElementById('inp-email').value.trim();
   if (!name || !email || !email.includes('@')) {
@@ -588,6 +607,7 @@ function startQuiz() {
   }
   userName = name;
   userEmail = email;
+  sendToEkomail(name, email);
   document.getElementById('screen-hero').style.display = 'none';
   document.getElementById('proof-section').style.display = 'block';
   document.getElementById('proof-section').scrollIntoView({behavior: 'smooth'});
