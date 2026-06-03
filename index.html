@@ -579,21 +579,43 @@ let pillarMax = [0, 0, 0, 0];
 let userName = '';
 let userEmail = '';
 
-async function sendToEkomail(name, email) {
+function sendToEkomail(name, email) {
   try {
-    const form = new FormData();
-    form.append('email', email);
-    form.append('name', name);
-    await fetch('https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16', {
-      method: 'POST',
-      body: form
-    });
+    // Skrytý iframe ako target
+    let iframe = document.getElementById('ekomail-iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'ekomail-iframe';
+      iframe.name = 'ekomail-iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+    // Skrytý formulár
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16';
+    form.target = 'ekomail-iframe';
+    form.style.display = 'none';
+
+    const emailInput = document.createElement('input');
+    emailInput.name = 'email';
+    emailInput.value = email;
+
+    const nameInput = document.createElement('input');
+    nameInput.name = 'name';
+    nameInput.value = name;
+
+    form.appendChild(emailInput);
+    form.appendChild(nameInput);
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(() => document.body.removeChild(form), 2000);
   } catch(e) {
     console.log('Ekomail:', e);
   }
 }
 
-async function startQuiz() {
+function startQuiz() {
   const name = document.getElementById('inp-name').value.trim();
   const email = document.getElementById('inp-email').value.trim();
   if (!name || !email || !email.includes('@')) {
