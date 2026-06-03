@@ -456,16 +456,16 @@
     <div class="prob-pill"><span class="x">✕</span> Slabá technika</div>
   </div>
 
-  <div class="optin-form">
+  <form action="https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16" method="POST" target="_blank" onsubmit="handleSubmit(event)" class="optin-form">
     <div class="optin-label">Kde ti pošleme výsledky?</div>
     <div class="input-row">
-      <input type="text" class="input-field" id="inp-name" placeholder="Meno" autocomplete="given-name">
-      <input type="email" class="input-field" id="inp-email" placeholder="E-mail" autocomplete="email">
+      <input type="text" name="name" class="input-field" id="inp-name" placeholder="Meno" required>
+      <input type="email" name="email" class="input-field" id="inp-email" placeholder="E-mail" required>
     </div>
     <div class="gdpr">Súhlasím so spracovaním údajov a zasielaním emailov. <a href="#">Podmienky ochrany súkromia.</a></div>
-    <button class="btn-start" onclick="startQuiz()">Spustiť diagnostiku →</button>
+    <button type="submit" class="btn-start">Spustiť diagnostiku →</button>
     <div class="hero-note">Bezplatné · Bez záväzkov · Výsledky ihneď</div>
-  </div>
+  </form>
 </div>
 
 
@@ -579,63 +579,24 @@ let pillarMax = [0, 0, 0, 0];
 let userName = '';
 let userEmail = '';
 
-function sendToEkomail(name, email) {
-  try {
-    // Skrytý iframe ako target
-    let iframe = document.getElementById('ekomail-iframe');
-    if (!iframe) {
-      iframe = document.createElement('iframe');
-      iframe.id = 'ekomail-iframe';
-      iframe.name = 'ekomail-iframe';
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-    }
-    // Skrytý formulár
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16';
-    form.target = 'ekomail-iframe';
-    form.style.display = 'none';
-
-    const emailInput = document.createElement('input');
-    emailInput.name = 'email';
-    emailInput.value = email;
-
-    const nameInput = document.createElement('input');
-    nameInput.name = 'name';
-    nameInput.value = name;
-
-    form.appendChild(emailInput);
-    form.appendChild(nameInput);
-    document.body.appendChild(form);
-    form.submit();
-    setTimeout(() => document.body.removeChild(form), 2000);
-  } catch(e) {
-    console.log('Ekomail:', e);
-  }
-}
-
-function startQuiz() {
+function handleSubmit(e) {
   const name = document.getElementById('inp-name').value.trim();
   const email = document.getElementById('inp-email').value.trim();
-  if (!name || !email || !email.includes('@')) {
-    alert('Prosím zadaj meno a platný email.');
-    return;
-  }
+  if (!name || !email) return;
   userName = name;
   userEmail = email;
-  sendToEkomail(name, email);
-  document.getElementById('screen-hero').style.display = 'none';
-  document.getElementById('proof-section').style.display = 'block';
-  document.getElementById('proof-section').scrollIntoView({behavior: 'smooth'});
+  // Spusti quiz po krátkom oneskorení
   setTimeout(() => {
+    document.getElementById('screen-hero').style.display = 'none';
     document.getElementById('proof-section').style.display = 'none';
     document.getElementById('screen-quiz').classList.add('active');
     window.scrollTo(0,0);
-  }, 4000);
-  questions.forEach(q => pillarMax[q.pillar] += 3);
-  renderQuestion();
+    questions.forEach(q => pillarMax[q.pillar] += 3);
+    renderQuestion();
+  }, 500);
 }
+
+function startQuiz() {}
 
 function renderQuestion() {
   const q = questions[currentQ];
