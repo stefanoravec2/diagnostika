@@ -456,16 +456,16 @@
     <div class="prob-pill"><span class="x">✕</span> Slabá technika</div>
   </div>
 
-  <form action="https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16" method="POST" target="_blank" onsubmit="handleSubmit(event)" class="optin-form">
+  <div class="optin-form">
     <div class="optin-label">Kde ti pošleme výsledky?</div>
     <div class="input-row">
-      <input type="text" name="name" class="input-field" id="inp-name" placeholder="Meno" required>
-      <input type="email" name="email" class="input-field" id="inp-email" placeholder="E-mail" required>
+      <input type="text" class="input-field" id="inp-name" placeholder="Meno" autocomplete="given-name">
+      <input type="email" class="input-field" id="inp-email" placeholder="E-mail" autocomplete="email">
     </div>
     <div class="gdpr">Súhlasím so spracovaním údajov a zasielaním emailov. <a href="#">Podmienky ochrany súkromia.</a></div>
-    <button type="submit" class="btn-start">Spustiť diagnostiku →</button>
+    <button class="btn-start" onclick="startQuiz()">Spustiť diagnostiku →</button>
     <div class="hero-note">Bezplatné · Bez záväzkov · Výsledky ihneď</div>
-  </form>
+  </div>
 </div>
 
 
@@ -579,24 +579,55 @@ let pillarMax = [0, 0, 0, 0];
 let userName = '';
 let userEmail = '';
 
-function handleSubmit(e) {
+function startQuiz() {
   const name = document.getElementById('inp-name').value.trim();
   const email = document.getElementById('inp-email').value.trim();
-  if (!name || !email) return;
+  if (!name || !email || !email.includes('@')) {
+    alert('Prosím zadaj meno a platný email.');
+    return;
+  }
   userName = name;
   userEmail = email;
-  // Spusti quiz po krátkom oneskorení
+
+  // Odoslať do Ekomailu cez skrytý formulár
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden_frame';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16';
+  form.target = 'hidden_frame';
+  form.style.display = 'none';
+
+  const fEmail = document.createElement('input');
+  fEmail.type = 'hidden';
+  fEmail.name = 'email';
+  fEmail.value = email;
+  form.appendChild(fEmail);
+
+  const fName = document.createElement('input');
+  fName.type = 'hidden';
+  fName.name = 'name';
+  fName.value = name;
+  form.appendChild(fName);
+
+  document.body.appendChild(form);
+  form.submit();
+
+  // Spusti quiz
+  document.getElementById('screen-hero').style.display = 'none';
+  document.getElementById('proof-section').style.display = 'block';
+  document.getElementById('proof-section').scrollIntoView({behavior: 'smooth'});
   setTimeout(() => {
-    document.getElementById('screen-hero').style.display = 'none';
     document.getElementById('proof-section').style.display = 'none';
     document.getElementById('screen-quiz').classList.add('active');
     window.scrollTo(0,0);
-    questions.forEach(q => pillarMax[q.pillar] += 3);
-    renderQuestion();
-  }, 500);
+  }, 3000);
+  questions.forEach(q => pillarMax[q.pillar] += 3);
+  renderQuestion();
 }
-
-function startQuiz() {}
 
 function renderQuestion() {
   const q = questions[currentQ];
