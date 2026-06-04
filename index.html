@@ -104,36 +104,61 @@
 
   /* ── FORM ── */
   .optin-form {
-    background: var(--dark2);
-    border: 1px solid var(--border);
+    background: #1a1a1a;
+    border: 1.5px solid #00C8BE;
     border-radius: 16px;
-    padding: 32px;
+    padding: 28px 24px;
     width: 100%;
     max-width: 420px;
     margin: 0 auto;
   }
-  .optin-label { font-size: 13px; color: var(--muted); margin-bottom: 16px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .optin-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #00C8BE;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .optin-label::before {
+    content: '';
+    display: inline-block;
+    width: 16px; height: 1.5px;
+    background: #00C8BE;
+    flex-shrink: 0;
+  }
+  .optin-subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .input-group { margin-bottom: 10px; }
+  .input-label-field { font-size: 11px; font-weight: 600; color: #888; letter-spacing: 0.04em; margin-bottom: 5px; display: block; }
   .input-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
   .input-field {
-    background: var(--dark3);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1.5px solid #2a2a2a;
     border-radius: 8px;
     padding: 13px 16px;
     font-size: 14px;
-    color: var(--text);
+    color: #111;
     font-family: 'Barlow', sans-serif;
     outline: none;
     transition: border-color 0.2s;
     width: 100%;
   }
   .input-field:focus { border-color: var(--teal); }
-  .input-field::placeholder { color: var(--muted); }
-  .gdpr { font-size: 11px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+  .input-field::placeholder { color: #aaa; }
+  .gdpr { font-size: 11px; color: #444; margin-bottom: 16px; line-height: 1.5; }
   .gdpr a { color: var(--teal); }
   .btn-start {
     width: 100%;
     background: var(--teal);
-    color: #111;
+    color: #fff;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 18px;
     font-weight: 700;
@@ -147,7 +172,7 @@
   }
   .btn-start:hover { background: #00b0a7; }
   .btn-start:active { transform: scale(0.99); }
-  .hero-note { font-size: 12px; color: var(--muted); margin-top: 16px; }
+  .hero-note { font-size: 12px; color: var(--muted); margin-top: 16px; text-align: center; }
 
   /* ── QUIZ ── */
   .quiz-screen {
@@ -323,10 +348,36 @@
   .btn-cta:hover { background: #00b0a7; }
   .cta-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
 
-  @media (max-width: 500px) {
-    .optin-form { padding: 24px 20px; }
-    .insights { grid-template-columns: 1fr; }
-    .hero-problems { gap: 7px; }
+  @media (max-width: 600px) {
+    .hero { padding: 30px 16px; }
+    .hero h1 { font-size: clamp(34px, 10vw, 52px); }
+    .hero-sub { font-size: 14px; }
+    .hero-problems { gap: 6px; }
+    .prob-pill { font-size: 12px; padding: 5px 10px; }
+
+    .optin-form { padding: 22px 18px; }
+    .btn-start { font-size: 16px; padding: 14px; }
+
+    .quiz-screen { padding: 24px 16px; }
+    .q-text { font-size: clamp(20px, 5vw, 28px); }
+    .answer-btn { font-size: 14px; padding: 14px 16px; }
+    .answer-letter { width: 24px; height: 24px; font-size: 11px; }
+    .btn-next { font-size: 15px; padding: 13px 28px; }
+
+    .result-screen { padding: 40px 16px; }
+    .result-profile-name { font-size: clamp(28px, 8vw, 44px); }
+    .result-profile-desc { font-size: 14px; }
+    .score-item { padding: 14px 16px; }
+    .insights { grid-template-columns: 1fr; gap: 8px; }
+    .cta-box { padding: 22px 18px; }
+    .cta-box h3 { font-size: 20px; }
+    .btn-cta { font-size: 15px; padding: 14px 24px; display: block; text-align: center; }
+
+    .proof-section { padding: 0 16px 60px; }
+    .proof-photo img { height: 200px; }
+    .proof-section-title { font-size: clamp(22px, 6vw, 32px); }
+    .stats-proof { flex-wrap: wrap; }
+    .stat-proof-item { min-width: calc(50% - 5px); }
   }
 
   /* ── SOCIAL PROOF SECTION ── */
@@ -458,9 +509,16 @@
 
   <div class="optin-form">
     <div class="optin-label">Kde ti pošleme výsledky?</div>
+    <div class="optin-subtitle">Zadaj email a dostaneš svoj bežecký profil ihneď po dokončení testu.</div>
     <div class="input-row">
-      <input type="text" name="name" class="input-field" id="inp-name" placeholder="Meno" autocomplete="given-name">
-      <input type="email" name="email" class="input-field" id="inp-email" placeholder="E-mail" autocomplete="email">
+      <div class="input-group">
+        <label class="input-label-field">MENO</label>
+        <input type="text" name="name" class="input-field" id="inp-name" placeholder="Tvoje meno" autocomplete="given-name">
+      </div>
+      <div class="input-group">
+        <label class="input-label-field">E-MAIL</label>
+        <input type="email" name="email" class="input-field" id="inp-email" placeholder="tvoj@email.sk" autocomplete="email">
+      </div>
     </div>
     <div class="gdpr">Súhlasím so spracovaním údajov a zasielaním emailov. <a href="#">Podmienky ochrany súkromia.</a></div>
     <button class="btn-start" onclick="startQuiz()">Spustiť diagnostiku →</button>
