@@ -420,11 +420,9 @@ function showResult() {
     `<div class="action-item"><span class="action-arrow">→</span>${a}</div>`
   ).join('');
 
-  // Presmeruj na vysledkovu stranku s parametrami
-  const params = new URLSearchParams();
-  pcts.forEach((pct, i) => params.set('p' + i, pct));
-  params.set('total', total);
-  window.location.href = 'https://stefanoravec2.github.io/diagnostika-zobrazit-vysledky/?' + params.toString();
+  // Uloz vysledky do sessionStorage a presmeruj
+  sessionStorage.setItem('tpd_results', JSON.stringify({pcts: pcts, total: total}));
+  window.location.href = 'https://stefanoravec2.github.io/diagnostika-zobrazit-vysledky/';
 }
 </script>
 </body>
