@@ -419,6 +419,12 @@ function showResult() {
   document.getElementById('action-items').innerHTML = actions[weakest.i].map(a =>
     `<div class="action-item"><span class="action-arrow">→</span>${a}</div>`
   ).join('');
+
+  // Presmeruj na vysledkovu stranku s parametrami
+  const params = new URLSearchParams();
+  pcts.forEach((pct, i) => params.set('p' + i, pct));
+  params.set('total', total);
+  window.location.href = 'https://stefanoravec2.github.io/diagnostika-zobrazit-vysledky/?' + params.toString();
 }
 </script>
 </body>
