@@ -328,7 +328,7 @@ function startQuiz() {
   if (!email || !email.includes('@')) { alert('Prosím zadaj platný email.'); return; }
   userName = name; userEmail = email;
   if(typeof fbq !== 'undefined') fbq('track', 'Lead');
-  fetch('https://api2.ecomail.app/rest/subscriber', {
+  fetch('https://treningovyprogram.ecomailapp.cz/api/v2/lists/4/subscribe', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -336,9 +336,8 @@ function startQuiz() {
     },
     body: JSON.stringify({
       subscriber_data: { email: email, name: name },
-      list_id: 4,
-      resubscribe: true,
-      skip_confirmation: true
+      resubscribe: 1,
+      skip_confirmation: 1
     })
   }).catch(() => {});
   questions.forEach(q => pillarMax[q.pillar] += 3);
