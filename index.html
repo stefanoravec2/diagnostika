@@ -328,19 +328,11 @@ function startQuiz() {
   if (!email || !email.includes('@')) { alert('Prosím zadaj platný email.'); return; }
   userName = name; userEmail = email;
   if(typeof fbq !== 'undefined') fbq('track', 'Lead');
-  const iframe = document.createElement('iframe');
-  iframe.name = 'ek_frame';
-  iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;';
-  document.body.appendChild(iframe);
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16';
-  form.target = 'ek_frame'; form.style.display = 'none';
-  const fe = document.createElement('input'); fe.type='hidden'; fe.name='email'; fe.value=email;
-  const fn = document.createElement('input'); fn.type='hidden'; fn.name='name'; fn.value=name;
-  form.appendChild(fe); form.appendChild(fn);
-  document.body.appendChild(form); form.submit();
-  setTimeout(() => { try { document.body.removeChild(form); document.body.removeChild(iframe); } catch(e){} }, 5000);
+  fetch('https://ecomail-proxy.vercel.app/api/subscribe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, name: name })
+  }).catch(function(){});
   questions.forEach(q => pillarMax[q.pillar] += 3);
   document.getElementById('screen-hero').style.display = 'none';
   const proof = document.getElementById('proof-section');
