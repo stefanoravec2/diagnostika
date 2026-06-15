@@ -328,18 +328,19 @@ function startQuiz() {
   if (!email || !email.includes('@')) { alert('Prosím zadaj platný email.'); return; }
   userName = name; userEmail = email;
   if(typeof fbq !== 'undefined') fbq('track', 'Lead');
-  fetch('https://api.ecomail.cz/lists/4/subscribe', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'key': '26c147e9f3d82297eec0953c679e6552fff7090595b9de49ce47c511e5b94bfe'
-    },
-    body: JSON.stringify({
-      subscriber_data: { email: email, name: name },
-      resubscribe: true,
-      trigger_autoresponders: true
-    })
-  }).catch(function(){});
+  const iframe = document.createElement('iframe');
+  iframe.name = 'ek_frame';
+  iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;';
+  document.body.appendChild(iframe);
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://treningovyprogram.ecomailapp.cz/public/subscribe/4/f67e22c6c3dacfc9b77b6b40399abc16';
+  form.target = 'ek_frame'; form.style.display = 'none';
+  const fe = document.createElement('input'); fe.type='hidden'; fe.name='email'; fe.value=email;
+  const fn = document.createElement('input'); fn.type='hidden'; fn.name='name'; fn.value=name;
+  form.appendChild(fe); form.appendChild(fn);
+  document.body.appendChild(form); form.submit();
+  setTimeout(() => { try { document.body.removeChild(form); document.body.removeChild(iframe); } catch(e){} }, 5000);
   questions.forEach(q => pillarMax[q.pillar] += 3);
   document.getElementById('screen-hero').style.display = 'none';
   const proof = document.getElementById('proof-section');
