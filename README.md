@@ -1,1 +1,1 @@
-# diagnostika
+test
