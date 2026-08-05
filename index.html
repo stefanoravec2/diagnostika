@@ -613,6 +613,12 @@ function showResult() {
     `<div class="action-item"><span class="action-arrow">→</span>${a}</div>`
   ).join('');
 
+  fetch('https://ecomail-proxy.vercel.app/api/subscribe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: userEmail, name: userName, profil: PILLAR_NAMES[weakestPillarIdx] })
+  }).catch(function(){});
+
   sessionStorage.setItem('tpd_results', JSON.stringify({
     pcts: pcts, total: total, weakest: weakestPillarIdx, emHash: userEmailHash,
     name: userName, email: userEmail
